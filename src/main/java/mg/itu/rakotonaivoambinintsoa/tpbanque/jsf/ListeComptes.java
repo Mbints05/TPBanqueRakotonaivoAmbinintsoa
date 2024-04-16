@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.List;
 import mg.itu.rakotonaivoambinintsoa.tpbanque.entity.CompteBancaire;
 import mg.itu.rakotonaivoambinintsoa.tpbanque.service.GestionnaireCompte;
+import mg.itu.rakotonaivoambinintsoa.tpbanque.util.Util;
 
 /**
  *
@@ -33,6 +34,12 @@ public class ListeComptes implements Serializable {
             listComptebancaire = gestCompte.getAllComptes();
         }
         return listComptebancaire;
+    }
+    
+    public String supprimerCompte(CompteBancaire compteBancaire) {
+        gestCompte.supprimerCompte(compteBancaire);
+        Util.addFlashInfoMessage("Compte N°"+compteBancaire.getId()+" : " + compteBancaire.getNom() + " supprimé");
+        return "listeComptes?faces-redirect=true";
     }
     
 }
