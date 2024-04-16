@@ -19,25 +19,27 @@ import mg.itu.rakotonaivoambinintsoa.tpbanque.service.GestionnaireCompte;
  * @author rakot
  */
 public class Init {
-    
+
     @Inject
     private GestionnaireCompte gestCompte;
-    
+
     List<CompteBancaire> listcbInit = new ArrayList();
-    
+
     public void init(
             @Observes
-            @Initialized(ApplicationScoped.class)
-            ServletContext context){
-        
+            @Initialized(ApplicationScoped.class) ServletContext context) {
+
         // Ajout de données à la liste
         listcbInit.add(new CompteBancaire("John Lennon", 150000));
         listcbInit.add(new CompteBancaire("Paul McCartney", 950000));
         listcbInit.add(new CompteBancaire("Ringo Starr", 20000));
         listcbInit.add(new CompteBancaire("Georges Harrisson", 100000));
-        
-        for (CompteBancaire cb : listcbInit) {
-            gestCompte.creerCompte(cb);
+
+        if (gestCompte.getAllComptes().isEmpty()) {
+            for (CompteBancaire cb : listcbInit) {
+                gestCompte.creerCompte(cb);
+            }
         }
+
     }
 }

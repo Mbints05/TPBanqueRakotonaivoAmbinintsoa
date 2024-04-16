@@ -48,4 +48,29 @@ public class GestionnaireCompte {
         Query query = em.createNamedQuery("comptebancaire.findAll");
         return query.getResultList();
     }
+    
+    //Chercher par ID
+    public CompteBancaire findById(int idCompte) {
+        return em.find(CompteBancaire.class, idCompte);
+    }
+    
+    @Transactional
+    public CompteBancaire update(CompteBancaire compteBancaire) {
+        return em.merge(compteBancaire);
+    }
+    
+    @Transactional
+    public void transfertArgent(int idCompteFrom,int idCompteTo,int somme){
+        CompteBancaire compteSource = this.findById(idCompteFrom);
+        CompteBancaire compteDestinataire = this.findById(idCompteTo);
+        
+        //Retrait source
+        compteSource.retirer(somme);
+        compteDestinataire.deposer(somme);
+        
+        //Update
+        this.update(compteSource);
+        this.update(compteDestinataire);
+        
+    }
 }
