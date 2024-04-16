@@ -60,10 +60,7 @@ public class GestionnaireCompte {
     }
     
     @Transactional
-    public void transfertArgent(int idCompteFrom,int idCompteTo,int somme){
-        CompteBancaire compteSource = this.findById(idCompteFrom);
-        CompteBancaire compteDestinataire = this.findById(idCompteTo);
-        
+    public void transfertArgent(CompteBancaire compteSource,CompteBancaire compteDestinataire,int somme){
         //Retrait source
         compteSource.retirer(somme);
         compteDestinataire.deposer(somme);

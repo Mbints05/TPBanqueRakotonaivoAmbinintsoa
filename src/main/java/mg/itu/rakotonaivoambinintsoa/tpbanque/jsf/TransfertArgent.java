@@ -10,6 +10,7 @@ import jakarta.inject.Inject;
 import java.io.Serializable;
 import mg.itu.rakotonaivoambinintsoa.tpbanque.entity.CompteBancaire;
 import mg.itu.rakotonaivoambinintsoa.tpbanque.service.GestionnaireCompte;
+import mg.itu.rakotonaivoambinintsoa.tpbanque.util.Util;
 
 /**
  *
@@ -20,24 +21,24 @@ import mg.itu.rakotonaivoambinintsoa.tpbanque.service.GestionnaireCompte;
 public class TransfertArgent implements Serializable {
     
     private CompteBancaire compteBancaire;
-    private int compteSource;
-    private int compteDestinataire;
+    private int idcompteSource;
+    private int idcompteDestinataire;
     private int somme;
 
     public int getCompteSource() {
-        return compteSource;
+        return idcompteSource;
     }
 
     public void setCompteSource(int compteSource) {
-        this.compteSource = compteSource;
-    }
+        this.idcompteSource = compteSource;
+    }                               
 
     public int getCompteDestinataire() {
-        return compteDestinataire;
+        return idcompteDestinataire;
     }
 
     public void setCompteDestinataire(int compteDestinataire) {
-        this.compteDestinataire = compteDestinataire;
+        this.idcompteDestinataire = compteDestinataire;
     }
 
     public int getSomme() {
@@ -57,14 +58,35 @@ public class TransfertArgent implements Serializable {
     public TransfertArgent() {
     }
     
-    /*public CompteBancaire getCompte(int idCompte){
-        compteBancaire = gestCompte.findById(idCompte);
-        return compteBancaire;
-    }*/
+    
     
     public String transfertArgent(){
-        gestCompte.transfertArgent(compteSource,compteDestinataire,somme);
-        return "listeComptes";
+        boolean erreur = false;
+        CompteBancaire compteSource = this.gestCompte.findById(idcompteSource);
+        CompteBancaire compteDestinataire = this.gestCompte.findById(idcompteDestinataire);
+        
+        // Vérification si les comptes existent bien dans la base de données
+        if (compteSource == null) {
+            Util.messageErreur("Aucun compte avec l'id : " + idcompteSource, "Aucun compte avec l'id : " + idcompteSource, "form:idSource");
+            erreur = true;
+        }if (compteDestinataire == null) {
+            Util.messageErreur("Aucun compte avec l'id : " + idcompteDestinataire, "Aucun compte avec l'id : " + idcompteDestinataire, "form:idDestinataire");
+            erreur = true;
+        }if (compteSource != null && compteSource.getSolde() < somme) {
+            Util.messageErreur("Le solde du compte source est insuffisant", "Le solde du compte source est insuffisant", "form:somme");
+            erreur = true;
+        }if (somme < 0) {
+            Util.messageErreur("Le montant saisi est invalide", "Le montant saisi est invalide", "form:somme");
+            erreur = true;
+        }
+        
+        if(!erreur){
+            gestCompte.transfertArgent(compteSource,compteDestinataire,somme);
+            Util.addFlashInfoMessage("Transfert: " + somme + "Ar depuis " + compteSource.getNom() + " vers " + compteDestinataire.getNom() + ".");
+            return "listeComptes?faces-redirect=true";
+        }else{
+            return null;
+        }
     }
     
 }
