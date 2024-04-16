@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="jakarta.faces.core"
+      xmlns:h="jakarta.faces.html">
+
+    <body>
+
+        <ui:composition template="./WEB-INF/templates/template_defaut.xhtml">
+            
+            <ui:define name="metadata">
+                <f:metadata>  
+                    <f:viewParam name="id" value="#{transaction.id}"  
+                                 required="true"/>  
+                    <f:viewAction action="#{transaction.loadCompte}"/>  
+                </f:metadata>
+            </ui:define>
+            
+            <ui:define name="top">
+                Depot/Retrait d'argent
+            </ui:define>
+
+            <ui:define name="content">
+                <h1>Depot/Retrait du compte N°#{transaction.id}
+                    :#{transaction.compte.nom}</h1>
+
+                <h:form>
+                    <h:panelGrid columns="3">
+                        Nom du titulaire :
+                        <h:outputText value="#{transaction.compte.nom}"/>
+                        <h:panelGroup/>
+                        Type du transaction :
+                        <h:selectOneRadio id="typeMouvement"
+                                          value="#{transaction.typeTransaction}"
+                                          required="true"
+                                          layout="pageDirection">
+                            <f:selectItem itemValue="ajout" itemLabel="Ajout"/>
+                            <f:selectItem itemValue="retrait" itemLabel="Retrait"/>
+                        </h:selectOneRadio>
+                        <h:message for="typeMouvement"/>
+                        Montant du transaction :
+                        <h:inputText id="montant" value="#{transaction.montant}"
+                                     required="true"
+                                     validator="#{transaction.validateSolde}"/>
+                        <h:message for="montant"/>
+                    </h:panelGrid>
+                    <h:commandButton action="#{transaction.enregistrerMouvement()}"
+                                     value="Enregistrer"/>
+                </h:form>
+                <h:messages/>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
