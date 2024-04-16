@@ -10,19 +10,21 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <h:outputStylesheet name="/css/default.css"/>
         <h:outputStylesheet name="/css/cssLayout.css"/>
-        <title>Exercices sur PRG</title>
+        <title>Exercices sur TP Banque</title>
     </h:head>
 
     <h:body>
 
 
         <div id="top" class="top">
-            <ui:insert name="top">TP PRG - #{titre}</ui:insert>
+            <ui:insert name="top">TP Banque</ui:insert>
         </div>
         <div>
             <div id="left">
                 <ui:insert name="left">
                     <ui:include src="menu.xhtml"/>
+                    <h:messages globalOnly="true" infoStyle="color: green;"
+                                errorStyle="color: red;"/>
                 </ui:insert>
             </div>
             <div id="content" class="left_content">
