@@ -65,7 +65,6 @@ public class TransfertArgent implements Serializable {
         CompteBancaire compteSource = this.gestCompte.findById(idcompteSource);
         CompteBancaire compteDestinataire = this.gestCompte.findById(idcompteDestinataire);
         
-        // Vérification si les comptes existent bien dans la base de données
         if (compteSource == null) {
             Util.messageErreur("Aucun compte avec l'id : " + idcompteSource, "Aucun compte avec l'id : " + idcompteSource, "form:idSource");
             erreur = true;
