@@ -14,6 +14,7 @@
 
             <ui:define name="content">
                 <h:form id="form">
+                    <h:panelGrid columns="3">
                     <h:outputLabel value="ID compte source" for="idSource"/>
                     <h:inputText id="idSource" value="#{transfertArgent.compteSource}" required="true" requiredMessage="L'ID de la source est requis"/>
                     <h:message for="idSource" />
@@ -28,6 +29,7 @@
                     
                     
                     <h:commandButton value="Enregistrer" action="#{transfertArgent.transfertArgent}"/>
+                    </h:panelGrid>
                 </h:form>
             </ui:define>
 
