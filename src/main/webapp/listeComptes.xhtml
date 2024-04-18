@@ -67,6 +67,17 @@
                                 <h:graphicImage name="images/update.png"/>
                             </h:link>
                         </p:column>
+                        
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText escape="" value="Historique opérations"/>
+                            </f:facet>
+                            <h:link outcome="operations"
+                                    title="Détail du compte: #{item.nom}" >
+                                <h:outputText value="Détails"/>
+                                <f:param name="idCompte" value="#{item.id}"/>
+                            </h:link>
+                        </p:column>
 
                     </p:dataTable>
                 </h:form>

@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+
+
+    <body>
+
+        <ui:composition template="./WEB-INF/templates/template_defaut.xhtml">
+
+            <ui:define name="metadata">
+                <f:metadata>
+                    <f:viewParam name="idCompte" value="#{operations.idCompte}"
+                                 required="true"/>
+                    <f:viewAction action="#{operations.loadOperation}"/>
+                </f:metadata>
+            </ui:define>
+
+            <ui:define name="top">
+                Historique des opérations sur le compte:#{operations.compteBancaire.nom}
+            </ui:define>
+
+            <ui:define name="content">
+                <p:dataTable value="#{operations.allOperationsBancaire}"
+                             var="item" 
+                             widgetVar="compteTable"
+                             emptyMessage="Aucun compte avec ce critère">
+
+                    <f:facet name="header">
+                        <p:outputPanel>
+                            <h:outputText value="Rechercher: "/>
+                            <p:inputText id="globalFilter" onkeyup="PF('compteTable').filter()"
+                                         style="width:150px"/>
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column sortBy="#{item.description}" filterBy="#{item.description}">
+                        <f:facet name="header">
+                            <h:outputText value="Description"/>
+                        </f:facet>
+                        <h:outputText value="#{item.description}"/>
+                    </p:column>
+
+                    <p:column sortBy="#{item.dateOperation}">
+                        <f:facet name="header">
+                            <h:outputText value="Date Opération" />
+                        </f:facet>
+                        <h:outputText value="#{item.dateOperation}"/>
+                    </p:column>
+
+                    <p:column sortBy="#{item.montant}">
+                        <f:facet name="header">
+                            <h:outputText value="Montant" />
+                        </f:facet>
+                        <h:outputText value="#{item.montant}"/>
+                    </p:column>
+
+                </p:dataTable>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
