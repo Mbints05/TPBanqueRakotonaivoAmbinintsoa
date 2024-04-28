@@ -21,7 +21,7 @@ import java.util.List;
  * @author rakot
  */
 @Entity
-@NamedQuery(name = "comptebancaire.findAll", query = "SELECT c FROM CompteBancaire c")
+@NamedQuery(name = "comptebancaire.findAll", query = "SELECT distinct c FROM CompteBancaire c JOIN FETCH c.opBancaires")
 @NamedQuery(name = "comptebancaire.count", query = "SELECT count(c) FROM CompteBancaire c")
 public class CompteBancaire implements Serializable {
 
@@ -34,7 +34,7 @@ public class CompteBancaire implements Serializable {
     private int solde;
 
     @OneToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
-    private List<OperationBancaire> opBancaire = new ArrayList();
+    private List<OperationBancaire> opBancaires = new ArrayList();
     
     public CompteBancaire() {
     }
@@ -43,22 +43,22 @@ public class CompteBancaire implements Serializable {
     public CompteBancaire(String nom, int solde) {
         this.nom = nom;
         this.solde = solde;
-        opBancaire.add(new OperationBancaire("Création de comtpe",solde));
+        opBancaires.add(new OperationBancaire("Création de comtpe",solde));
     }
     
     public List<OperationBancaire> getOperations(){
-        return this.opBancaire;
+        return this.opBancaires;
     }
 
     public void deposer(int montant) {
         solde += montant;
-        opBancaire.add(new OperationBancaire("Crédit",montant));
+        opBancaires.add(new OperationBancaire("Crédit",montant));
     }
 
     public void retirer(int montant) {
         if (montant < solde) {
             solde -= montant;
-            opBancaire.add(new OperationBancaire("Débit",-montant));
+            opBancaires.add(new OperationBancaire("Débit",-montant));
         } else {
             solde = 0;
         }
