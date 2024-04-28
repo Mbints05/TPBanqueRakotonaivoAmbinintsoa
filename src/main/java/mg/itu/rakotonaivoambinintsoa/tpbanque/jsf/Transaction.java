@@ -7,6 +7,7 @@ package mg.itu.rakotonaivoambinintsoa.tpbanque.jsf;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.component.UIInput;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Named;
@@ -66,13 +67,22 @@ public class Transaction implements Serializable {
     }
 
     public String enregistrerMouvement() {
-        if (typeTransaction.equals("ajout")) {
-            gestionnaireCompte.deposer(compte, montant);
-        } else {
-            gestionnaireCompte.retirer(compte, montant);
+        try{
+            if (typeTransaction.equals("ajout")) {
+                gestionnaireCompte.deposer(compte, montant);
+            } else {
+                gestionnaireCompte.retirer(compte, montant);
+            }
+            Util.addFlashInfoMessage("Mouvement enregistré sur le compte de " + compte.getNom());
+            return "listeComptes?faces-redirect=true";
+        
+        }catch(OptimisticLockException ex){
+            Util.messageErreur("Le compte de " + compte.getNom() + " modifié par un autre utilisateur,rééssayer");
+
+            this.loadCompte();
+            return null;
         }
-        Util.addFlashInfoMessage("Mouvement enregistré sur le compte de " + compte.getNom());
-        return "listeComptes?faces-redirect=true";
+        
     }
 
     /**
