@@ -99,4 +99,9 @@ public class GestionnaireCompte {
         em.remove(em.merge(compte));
     }
     
+    public long compterComptes() {
+        Query query = em.createNamedQuery("comptebancaire.count");
+        return (long) query.getSingleResult();
+    }
+    
 }

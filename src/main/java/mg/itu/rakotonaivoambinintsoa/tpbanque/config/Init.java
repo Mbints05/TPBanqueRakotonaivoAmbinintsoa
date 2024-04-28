@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 import jakarta.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import mg.itu.rakotonaivoambinintsoa.tpbanque.entity.CompteBancaire;
 import mg.itu.rakotonaivoambinintsoa.tpbanque.service.GestionnaireCompte;
 
@@ -20,26 +21,30 @@ import mg.itu.rakotonaivoambinintsoa.tpbanque.service.GestionnaireCompte;
  */
 public class Init {
 
+    
     @Inject
     private GestionnaireCompte gestCompte;
-
-    List<CompteBancaire> listcbInit = new ArrayList();
-
+    
+    private final static Logger logger = Logger.getLogger("mg.itu.rakotonaivoambinintsoa.tpbanque.Init");
+    
     public void init(
             @Observes
             @Initialized(ApplicationScoped.class) ServletContext context) {
-
-        // Ajout de données à la liste
-        listcbInit.add(new CompteBancaire("John Lennon", 150000));
-        listcbInit.add(new CompteBancaire("Paul McCartney", 950000));
-        listcbInit.add(new CompteBancaire("Ringo Starr", 20000));
-        listcbInit.add(new CompteBancaire("Georges Harrisson", 100000));
-
-        if (gestCompte.getAllComptes().isEmpty()) {
-            for (CompteBancaire cb : listcbInit) {
-                gestCompte.creerCompte(cb);
-            }
+        
+        if (this.gestCompte.compterComptes() != 0) {
+            logger.info("La table contient des données");
+            return;
         }
+        
+        CompteBancaire john = new CompteBancaire("John Lennon", 150000);
+        CompteBancaire paul = new CompteBancaire("Paul McCartney", 950000);
+        CompteBancaire ringo = new CompteBancaire("Ringo Starr", 20000);
+        CompteBancaire georges = new CompteBancaire("Georges Harrisson", 100000);
+
+        this.gestCompte.creerCompte(john);
+        this.gestCompte.creerCompte(paul);
+        this.gestCompte.creerCompte(ringo);
+        this.gestCompte.creerCompte(georges);
 
     }
 }

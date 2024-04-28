@@ -22,6 +22,7 @@ import java.util.List;
  */
 @Entity
 @NamedQuery(name = "comptebancaire.findAll", query = "SELECT c FROM CompteBancaire c")
+@NamedQuery(name = "comptebancaire.count", query = "SELECT count(c) FROM CompteBancaire c")
 public class CompteBancaire implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -57,7 +58,7 @@ public class CompteBancaire implements Serializable {
     public void retirer(int montant) {
         if (montant < solde) {
             solde -= montant;
-            opBancaire.add(new OperationBancaire("Débit",montant));
+            opBancaire.add(new OperationBancaire("Débit",-montant));
         } else {
             solde = 0;
         }
